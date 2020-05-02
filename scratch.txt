@@ -1,0 +1,55 @@
+conversations: [
+	conversation: {                       <--- New Conversation 
+		conversation_id: { id }
+		conversation: {
+			id: o
+			type
+			self_conversation_state: o
+			read_state: a
+			has_active_hangout
+			otr_status
+			otr_toggle
+			current_participant: a
+			participant_data: [ <---- Participant data
+				{
+					id: {
+						gaia_id
+						chat_id <---- chat_id
+					}
+					fallback_name **********  <--- participant name
+					invitation_status
+					participant_type
+					new_invitation_status
+					in_different_customer_as_requester
+					domain_id
+				}
+				...
+			]
+			fork_on_external_invite
+			network_type: a
+			force_history_state
+			group_link_sharing_status
+		}
+	},
+	events: [   <---- start of messages
+		{
+			conversation_id: o
+			sender_id: {
+				gaia_id
+				chat_id <---- sender id
+			}
+			timestamp
+			self_event_state: o
+			chat_message: {
+				message_content: {
+					segment: [
+						{
+							type
+							text *** <---- message
+						}
+					]
+				}
+			}
+		}
+	]
+]
