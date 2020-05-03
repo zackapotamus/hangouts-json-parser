@@ -4,9 +4,11 @@
 import ijson
 from termcolor import colored
 from datetime import datetime
+import os
 
 global_name_id_dict = {}
 global_chat_name_dict = {}
+global_participant_set = set()
 
 def parse_json(json_filename):
     with open(json_filename, 'rb') as input_file:
@@ -25,7 +27,7 @@ def zack_function(json_filename):
         fallback_name = ''
         sender_id = ''
         for prefix, event, value in parser:
-            if (prefix, event) == ('conversations.item.conversation,', 'start_map'):
+            if (prefix, event) == ('conversations.item.conversation', 'start_map'):
                 # print("Start of Conversation")
                 name_id_dict = {}
                 conversation_id = ''
@@ -33,6 +35,7 @@ def zack_function(json_filename):
             elif (prefix, event) == ('onversations.item.conversation.conversation_id.id', 'string'):
                 # print("conversation_id", value)
                 conversation_id = value
+                print(global_chat_name_dict[conversation_id])
             elif (prefix, event) == ('conversations.item.conversation.conversation.participant_data.item.id.chat_id', 'string'):
                 # print("chat_id", value)
                 chat_id = value
@@ -46,36 +49,6 @@ def zack_function(json_filename):
                 print('{}: {}'.format(global_name_id_dict[sender_id], value))
             elif (prefix, event) == ('conversations.item.events', 'end_array'):
                 print('--------------------------------')
-
-# def get_participants(json_filename):
-#     with open(json_filename, 'rb') as input_file:
-#         parser = ijson.parse(input_file)
-#         if (prefix, event) == ('conversations.item.conversation,', 'start_map'):
-#             # print("Start of Conversation")
-#             name_id_dict = {}
-#             chat_name_dict = {}
-#             conversation_id = ''
-#             sender_id = ''
-#         elif (prefix, event) == ('onversations.item.conversation.conversation_id.id', 'string'):
-#             # print("conversation_id", value)
-#             conversation_id = value
-
-#         for prefix, event, value in parser:
-#             if (prefix, event) == ('conversations.item.conversation.conversation.participant_data.item.id.chat_id', 'string'):
-#                 # print("chat_id", value)
-#                 chat_id = value
-#                 name_id_dict[chat_id] = chat_id
-#                 chat_name_dict[chat_id] = name_id_dict
-#                 global_name_id_dict[chat_id] = chat_id
-#             elif (prefix, event) == ('conversations.item.conversation.conversation.participant_data.item.fallback_name', 'string'):
-#                 # fallback_name = value
-#                 name_id_dict[chat_id] = value
-#                 global_name_id_dict[chat_id] = value
-#             elif (prefix, event) == ('conversations.item.events', 'end_array'):
-#                 global_chat_name_dict[chat_id] = "".join(name_id_dict.values())
-
-#     print(global_name_id_dict)
-#     zack_function(json_filename)
 
 def get_participants(json_filename):
     with open(json_filename, 'rb') as input_file:
@@ -84,36 +57,38 @@ def get_participants(json_filename):
         name_id_dict = {}
         chat_id = ''
         fallback_name = ''
-        sender_id = ''
         for prefix, event, value in parser:
-            if (prefix, event) == ('conversations.item.conversation,', 'start_map'):
-                # print("Start of Conversation")
+            if (prefix, event) == ('conversations.item.conversation', 'start_map'):
+                # print("Start of Conversation******************************************************")
                 name_id_dict = {}
                 conversation_id = ''
-                sender_id = ''
-            elif (prefix, event) == ('onversations.item.conversation.conversation_id.id', 'string'):
+            elif (prefix, event) == ('conversations.item.conversation.conversation_id.id', 'string'):
                 # print("conversation_id", value)
                 conversation_id = value
             elif (prefix, event) == ('conversations.item.conversation.conversation.participant_data.item.id.chat_id', 'string'):
                 # print("chat_id", value)
                 chat_id = value
                 name_id_dict[chat_id] = chat_id
+                global_name_id_dict[chat_id] = chat_id
             elif (prefix, event) == ('conversations.item.conversation.conversation.participant_data.item.fallback_name', 'string'):
                 fallback_name = value
                 name_id_dict[chat_id] = fallback_name
-            if (prefix, event) == ('conversations.item.events.item.sender_id.chat_id', 'string'):
-                sender_id = value
-            elif (prefix, event) == ('conversations.item.events.item.chat_message.message_content.segment.item.text', 'string'):
-                print('{}: {}'.format(global_name_id_dict[sender_id], value))
+                global_name_id_dict[chat_id] = fallback_name
+            # elif (prefix, event) == ('conversations.item.events.item.chat_message.message_content.segment.item.text', 'string'):
+            #     print('{}: {}'.format(global_name_id_dict[sender_id], value))
             elif (prefix, event) == ('conversations.item.events', 'end_array'):
-                print('--------------------------------')
+                global_chat_name_dict[conversation_id] = "|".join(name_id_dict.values())
+                print(global_chat_name_dict[conversation_id])
+                # print(conversation_id)
+    zack_function(json_filename)
+    
 
 
 if __name__ == '__main__':
-    parse_json('./hangouts_json_test.json')
+    # parse_json('./hangouts_json_test.json')
     # zack_function('./hangouts_json_test.json')
     # get_participants('./hangouts_json_test.json')
-    # get_participants('/Users/zackhayden/Downloads/Takeout/Hangouts/Hangouts.json')
+    get_participants('/Users/zackhayden/Downloads/Takeout/Hangouts/Hangouts.json')
     # parse_json('/Users/zackhayden/Downloads/Takeout/Hangouts/Hangouts.json')
     # zack_function('/Users/zackhayden/Downloads/Takeout/Hangouts/Hangouts.json')
 
