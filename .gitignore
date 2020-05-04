@@ -105,3 +105,6 @@ dist
 Hangouts.json
 .vscode/
 output/
+participants.py
+contacts.csv
+ouptut.txt
