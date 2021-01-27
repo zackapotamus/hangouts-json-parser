@@ -155,7 +155,7 @@ def zack_function(json_filename):
                 "string",
             ):
                 timestamp = datetime.fromtimestamp(int(value) / 1000000)
-                timestamp_display = timestamp.strftime("%Y-%m-%d %-I:%M:%S %p")
+                # timestamp_display = timestamp.strftime("%Y-%m-%d %-I:%M:%S %p")
             elif (prefix, event) == (
                 "conversations.item.events.item.chat_message.message_content.segment.item.text",
                 "string",
@@ -172,10 +172,10 @@ def zack_function(json_filename):
                 "conversations.item.events.item.chat_message.message_content.attachment.item.embed_item.plus_photo.url",
                 "string",
             ):
-                the_sender = participant_dict.get(
-                    normalize_number(global_name_id_dict[sender_id]),
-                    global_name_id_dict[sender_id],
-                )
+                # the_sender = participant_dict.get(
+                #     normalize_number(global_name_id_dict[sender_id]),
+                #     global_name_id_dict[sender_id],
+                # )
                 # print("{}@{}>{}: {}".format(global_chat_name_dict[conversation_id], timestamp_display, the_sender, value))
                 write_to_file(
                     timestamp, sender_id, conversation_id, "attachment", value
