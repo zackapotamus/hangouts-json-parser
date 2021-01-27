@@ -14,7 +14,7 @@ import magic
 
 NUMBER_REGEX = re.compile(r"[\d\+]")
 PLUS_ONE_REGEX = re.compile(r"^\+?1")
-FILENAME_REGEX = re.compile(r'[\+\*\?%/\\]')
+FILENAME_REGEX = re.compile(r"[\+\*\?%/\\]")
 
 
 def normalize_number(number_string):
@@ -38,6 +38,7 @@ with open("contacts.csv", newline="") as csvfile:
 global_name_id_dict = {}
 global_chat_name_dict = {}
 
+
 def extension_from_mime(mime_type):
     if mime_type == "image/png":
         return ".png"
@@ -50,8 +51,9 @@ def extension_from_mime(mime_type):
     elif mime_type == "video/3gpp":
         return ".3gp"
     elif "/" in mime_type:
-        return '.{}'.format(mime_type[mime_type.find('/')+1:])
+        return ".{}".format(mime_type[mime_type.find("/") + 1 :])
     return ""
+
 
 def parse_json(json_filename):
     with open(json_filename, "rb") as input_file:
@@ -79,24 +81,29 @@ def write_to_file(timestamp_dt, sender_id, conversation_id, message_type, messag
             file.write("[{}] {}: {}\n".format(timestamp_display, sender_name, message))
     elif message_type == "attachment":
         timestamp_display = timestamp_dt.strftime("%Y-%m-%d-%H-%M-%S.%f")
-        new_file_name = ''
+        new_file_name = ""
         o = urlparse(message)
         original_file_name = os.path.basename(o.path)
-        if '.' not in original_file_name:
-            if '%' in original_file_name:
-                new_file_name = original_file_name[0:original_file_name.find('%')]
+        if "." not in original_file_name:
+            if "%" in original_file_name:
+                new_file_name = original_file_name[0 : original_file_name.find("%")]
             else:
                 new_file_name = original_file_name
         else:
-            new_file_name = original_file_name[0:original_file_name.find('.')]
-        new_file_name = FILENAME_REGEX.sub('', '{}__{}_{}'.format(sender_name.replace(" ", "_"), timestamp_display, new_file_name))
+            new_file_name = original_file_name[0 : original_file_name.find(".")]
+        new_file_name = FILENAME_REGEX.sub(
+            "",
+            "{}__{}_{}".format(
+                sender_name.replace(" ", "_"), timestamp_display, new_file_name
+            ),
+        )
         # build path
         path_part = os.path.join("./output", conversation_name, "images")
         file_path = os.path.join(path_part, new_file_name)
         # print('{}  {}'.format(file_path, message))
         if not os.path.exists(path_part):
             os.makedirs(path_part)
-        with open(file_path, 'wb') as out_file:
+        with open(file_path, "wb") as out_file:
             c = pycurl.Curl()
             c.setopt(c.URL, message)
             c.setopt(c.WRITEDATA, out_file)
@@ -104,9 +111,7 @@ def write_to_file(timestamp_dt, sender_id, conversation_id, message_type, messag
             c.close()
         mime_type = magic.from_file(file_path, mime=True)
         extension = extension_from_mime(mime_type)
-        os.rename(file_path, '{}{}'.format(file_path, extension))
-        
-
+        os.rename(file_path, "{}{}".format(file_path, extension))
 
 
 def zack_function(json_filename):
@@ -165,9 +170,7 @@ def zack_function(json_filename):
                 #     global_name_id_dict[sender_id],
                 # )
                 # print("{}@{}>{}: {}".format(global_chat_name_dict[conversation_id], timestamp_display, the_sender, value))
-                write_to_file(
-                    timestamp, sender_id, conversation_id, "text", value
-                )
+                write_to_file(timestamp, sender_id, conversation_id, "text", value)
             elif (prefix, event) == (
                 "conversations.item.events.item.chat_message.message_content.attachment.item.embed_item.plus_photo.url",
                 "string",
