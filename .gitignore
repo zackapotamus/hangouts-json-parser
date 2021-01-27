@@ -110,3 +110,7 @@ contacts.csv
 output.txt
 contacts.numbers
 *.jpg
+*.png
+*.gif
+outfiles/
+.DS_Store
