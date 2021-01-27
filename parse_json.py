@@ -78,7 +78,7 @@ def write_to_file(timestamp_dt, sender_id, conversation_id, message_type, messag
         with open(file_path, "a") as file:
             file.write("[{}] {}: {}\n".format(timestamp_display, sender_name, message))
     elif message_type == "attachment":
-        timestamp_display = timestamp_dt.strftime("%Y-%m-%d-%H:%M:%S.%f")
+        timestamp_display = timestamp_dt.strftime("%Y-%m-%d-%H-%M-%S.%f")
         new_file_name = ''
         o = urlparse(message)
         original_file_name = os.path.basename(o.path)
@@ -241,8 +241,8 @@ if __name__ == "__main__":
     # parse_json('./hangouts_json_test.json')
     # zack_function('./hangouts_json_test.json')
     # get_participants('./hangouts_json_test.json')
-    get_participants("/Users/zackhayden/Downloads/Takeout 2/Hangouts/Hangouts.json")
-    # parse_json("/Users/zackhayden/Downloads/Takeout/Hangouts/Hangouts.json")
+    # get_participants("/Users/zackhayden/Downloads/Takeout 2/Hangouts/Hangouts.json")
+    parse_json("/Users/zackhayden/Downloads/Takeout/Hangouts/Hangouts.json")
     # zack_function('/Users/zackhayden/Downloads/Takeout/Hangouts/Hangouts.json')
 
 # I guess we'll loop twice -_-
