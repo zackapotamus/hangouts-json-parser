@@ -117,7 +117,7 @@ def zack_function(json_filename):
         gaia_id = ""
         fallback_name = ""
         sender_id = ""
-        timestamp_display = ""
+        # timestamp_display = ""
         timestamp = None
         for prefix, event, value in parser:
             if (prefix, event) == ("conversations.item.conversation", "start_map"):
@@ -160,10 +160,10 @@ def zack_function(json_filename):
                 "conversations.item.events.item.chat_message.message_content.segment.item.text",
                 "string",
             ):
-                the_sender = participant_dict.get(
-                    normalize_number(global_name_id_dict[sender_id]),
-                    global_name_id_dict[sender_id],
-                )
+                # the_sender = participant_dict.get(
+                #     normalize_number(global_name_id_dict[sender_id]),
+                #     global_name_id_dict[sender_id],
+                # )
                 # print("{}@{}>{}: {}".format(global_chat_name_dict[conversation_id], timestamp_display, the_sender, value))
                 write_to_file(
                     timestamp, sender_id, conversation_id, "text", value
